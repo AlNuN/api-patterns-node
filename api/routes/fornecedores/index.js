@@ -35,7 +35,8 @@ roteador.get('/:id', async (req, res, next) => {
     const fornecedor = new Fornecedor({ id });
     await fornecedor.um();
     const serializador = new SerializadorFornecedor(
-      res.getHeader('Content-Type')
+      res.getHeader('Content-Type'),
+      [ 'email', 'dataCriacao', 'dataAtualizacao', 'versao' ]
     );
     res.status(200).send(
       serializador.serializar(fornecedor)

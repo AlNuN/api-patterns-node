@@ -7,7 +7,7 @@ const CampoInvalido = require('./erros/CampoInvalido');
 const DadosNaoFornecidos = require('./erros/DadosNaoFornecidos');
 const ValorNaoSuportado = require('./erros/ValorNaoSuportado');
 const formatosAceitos = require('./Serializador').formatosAceitos;
-const SerializadorFornecedor = require('./Serializador').SerializadorFornecedor;
+const SerializadorErro = require('./Serializador').SerializadorErro;
 
 const port = config.get('api.port');
 
@@ -41,13 +41,13 @@ app.use((erro, req, res, next) => {
   if (erro instanceof ValorNaoSuportado) 
     status = 406;
 
-  const serializador = new SerializadorFornecedor(
+  const serializador = new SerializadorErro(
     res.getHeader('Content-Type')
   );
   res.status(status).send(
       serializador.serializar({ 
       mensagem: erro.message,
-      id: erro.idErro
+      id: erro.idErro,
     })
   );
 })
