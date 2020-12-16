@@ -1,35 +1,51 @@
 const roteador = require('express').Router();
 const TabelaFornecedor = require('./TabelaFornecedor');
 const Fornecedor = require('./Fornecedor');
+const SerializadorFornecedor = require('../../Serializador').SerializadorFornecedor;
 
 roteador.get('/', async (req, res) => {
   const resultados = await TabelaFornecedor.listar();
-  res.status(200).json(resultados);
+  const serializador = new SerializadorFornecedor(
+    res.getHeader('Content-Type')
+  );
+  res.status(200).send(
+    serializador.serializar(resultados)
+  );
 });
 
-roteador.post('/', async (req, res) => {
+roteador.post('/', async (req, res, next) => {
   try{
     const data = req.body;
     const fornecedor = new Fornecedor(data);
     await fornecedor.criar();
-    res.status(201).json(fornecedor);
+    const serializador = new SerializadorFornecedor(
+      res.getHeader('Content-Type')
+    );
+    res.status(201).send(
+      serializador.serializar(fornecedor)
+    );
   } catch (e) {
-    res.status(400).json({ mensagem: e.message })
+    next(e);
   }
 });
 
-roteador.get('/:id', async (req, res) => {
+roteador.get('/:id', async (req, res, next) => {
   try {
     const id = req.params.id;
     const fornecedor = new Fornecedor({ id });
     await fornecedor.um();
-    res.status(200).json(fornecedor);
+    const serializador = new SerializadorFornecedor(
+      res.getHeader('Content-Type')
+    );
+    res.status(200).send(
+      serializador.serializar(fornecedor)
+    );
   } catch (e) {
-    res.status(404).json({ mensagem: e.message });
+    next(e);
   }
 });
 
-roteador.put('/:id', async (req, res) => {
+roteador.put('/:id', async (req, res, next) => {
   try {
     const id = req.params.id;
     const body = req.body;
@@ -38,11 +54,11 @@ roteador.put('/:id', async (req, res) => {
     await fornecedor.atualizar();
     res.status(204).end();
   } catch (e) {
-    res.status(400).json({ mensagem: e.message });
+    next(e);
   }
 });
 
-roteador.delete('/:id', async (req, res) => {
+roteador.delete('/:id', async (req, res, next) => {
   try{
     const id = req.params.id;
     const fornecedor = new Fornecedor({ id });
@@ -50,7 +66,7 @@ roteador.delete('/:id', async (req, res) => {
     await fornecedor.remover(id);
     res.status(204).end();
   } catch (e) {
-    res.status(404).json({ mensagem: e.message });
+    next(e);
   }
 });
 
