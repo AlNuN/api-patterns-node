@@ -50,7 +50,7 @@ app.use((erro, req, res, next) => {
       id: erro.idErro,
     })
   );
-})
+});
 
 app.listen(port, () => 
 console.log(`A API está rodando no endereço http://localhost/${port}`));
