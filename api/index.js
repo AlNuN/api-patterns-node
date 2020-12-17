@@ -30,6 +30,11 @@ app.use((req, res, next) => {
   next();
 })
 
+app.use((req, res, next) => {
+  res.set('X-Powered-By', 'Gatito Petshop');
+  next();
+})
+
 app.use('/api/fornecedores', roteador);
 
 app.use((erro, req, res, next) => {
