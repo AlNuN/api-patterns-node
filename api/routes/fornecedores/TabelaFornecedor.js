@@ -15,7 +15,7 @@ module.exports = {
       }
     });
     if (!encontrado) {
-      throw new NaoEncontrado(id);
+      throw new NaoEncontrado('Fornecedor', id);
     }
       return encontrado;
   },
