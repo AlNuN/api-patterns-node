@@ -32,6 +32,7 @@ app.use((req, res, next) => {
 
 app.use((req, res, next) => {
   res.set('X-Powered-By', 'Gatito Petshop');
+  res.set('Access-Control-Allow-Origin', '*');
   next();
 })
 

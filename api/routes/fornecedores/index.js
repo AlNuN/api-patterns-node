@@ -3,6 +3,12 @@ const TabelaFornecedor = require('./TabelaFornecedor');
 const Fornecedor = require('./Fornecedor');
 const SerializadorFornecedor = require('../../Serializador').SerializadorFornecedor;
 
+roteador.options('/', (req, res) => {
+  res.set('Access-Control-Allow-Methods', 'GET, POST');
+  res.set('Access-Control-Allow-Headers', 'Content-Type');
+  res.status(204).end();
+});
+
 roteador.get('/', async (req, res) => {
   const resultados = await TabelaFornecedor.listar();
   const serializador = new SerializadorFornecedor(
@@ -27,6 +33,12 @@ roteador.post('/', async (req, res, next) => {
   } catch (e) {
     next(e);
   }
+});
+
+roteador.options('/:id', (req, res) => {
+  res.set('Access-Control-Allow-Methods', 'GET, PUT, DELETE');
+  res.set('Access-Control-Allow-Headers', 'Content-Type');
+  res.status(204).end();
 });
 
 roteador.get('/:id', async (req, res, next) => {
